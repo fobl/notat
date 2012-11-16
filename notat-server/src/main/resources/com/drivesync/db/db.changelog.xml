@@ -6,7 +6,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.1.xsd">
     <changeSet author="Frode">
         <createTable name="gruppe">
-            <column name="id" type="int"/>
+            <column name="id" type="number"/>
             <column name="tittel" type="varchar(255)"/>
             <column name="innhold" type="text" />
             <column name="endret_tid" type="datetime"/>

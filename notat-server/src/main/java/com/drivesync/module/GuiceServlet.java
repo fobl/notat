@@ -8,9 +8,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.joda.time.LocalDateTime;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 public class GuiceServlet extends GuiceServletContextListener {
@@ -19,28 +20,31 @@ public class GuiceServlet extends GuiceServletContextListener {
 
     @Override
     protected Injector getInjector() {
-        injector = Guice.createInjector(new ServletModule(){
+        injector = Guice.createInjector(new ServletModule() {
             @Override
             protected void configureServlets() {
-                serve("/notat").with(NotatServlet.class);
-                serve("/notat/").with(NotatServlet.class);
+                try {
+                    serve("/notat").with(NotatServlet.class);
+                    serve("/notat/").with(NotatServlet.class);
 
-                BasicDataSource ds = new BasicDataSource();
-                ds.setDriverClassName("com.mysql.jdbc.Driver");
-                ds.setUsername("root");
-                ds.setUrl("jdbc:mysql://localhost:3306/drivesync");
-                bind(DataSource.class).toInstance(ds);
+                    InitialContext ct = new InitialContext();
+                    DataSource ds = (DataSource) ct.lookup("jdbc/notat");
+                    bind(DataSource.class).toInstance(ds);
 
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-                Gson gson = gsonBuilder.create();
-                bind(Gson.class).toInstance(gson);
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+                    Gson gson = gsonBuilder.create();
+                    bind(Gson.class).toInstance(gson);
+                } catch (NamingException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         });
         return injector;
     }
 
-    public Injector getProduksjonInjector(){
+    public Injector getProduksjonInjector() {
         return injector;
     }
 }
