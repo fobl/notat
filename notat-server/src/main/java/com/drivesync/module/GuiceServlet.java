@@ -10,10 +10,6 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import org.joda.time.LocalDateTime;
 
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 public class GuiceServlet extends GuiceServletContextListener {
 
     private Injector injector;
@@ -23,22 +19,13 @@ public class GuiceServlet extends GuiceServletContextListener {
         injector = Guice.createInjector(new ServletModule() {
             @Override
             protected void configureServlets() {
-                try {
-                    serve("/notat").with(NotatServlet.class);
-                    serve("/notat/").with(NotatServlet.class);
+                serve("/notat").with(NotatServlet.class);
+                serve("/notat/").with(NotatServlet.class);
 
-                    InitialContext ct = new InitialContext();
-                    DataSource ds = (DataSource) ct.lookup("jdbc/notat");
-                    bind(DataSource.class).toInstance(ds);
-
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
-                    Gson gson = gsonBuilder.create();
-                    bind(Gson.class).toInstance(gson);
-                } catch (NamingException e) {
-                    throw new RuntimeException(e);
-                }
-
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+                Gson gson = gsonBuilder.create();
+                bind(Gson.class).toInstance(gson);
             }
         });
         return injector;

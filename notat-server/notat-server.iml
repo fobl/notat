@@ -97,6 +97,28 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/org.mortbay.jetty/jetty-naming/6.1.25/jar/1f3c3f25eeeb80728125e91e3e807bdd6b217ea7/jetty-naming-6.1.25.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/org.mortbay.jetty/jetty-naming/6.1.25/source/f1938b2059a1327a2fc7e711653d87d6cecb9f2a/jetty-naming-6.1.25-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/org.mortbay.jetty/jetty-plus/6.1.25/jar/5cdbeba449fe8b3d19de17e3b155acc7584c2ee7/jetty-plus-6.1.25.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/org.mortbay.jetty/jetty-plus/6.1.25/source/8a100c531b82ba06aed9017af6f7793fd0725a6f/jetty-plus-6.1.25-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/com.google.code.gson/gson/2.2.2/jar/1f96456ca233dec780aa224bff076d8e8bca3908/gson-2.2.2.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -189,6 +211,26 @@
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/org.mortbay.jetty/servlet-api/2.5-20081211/source/b0b7c1931bcdbeb25c2aa4aec14d7b979b53dc51/servlet-api-2.5-20081211-sources.jar!/" />
         </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/javax.mail/mail/1.4/jar/1aa1579ae5ecd41920c4f355b0a9ef40b68315dd/mail-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/javax.mail/mail/1.4/source/fdd508f19a5075196138c94b341120e917c10e8a/mail-1.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/artifacts-14/filestore/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/jar/790d5f324b49f949c947344ee2d60b45205a2932/geronimo-spec-jta-1.0.1B-rc4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">

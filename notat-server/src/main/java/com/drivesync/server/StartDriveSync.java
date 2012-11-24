@@ -41,7 +41,6 @@ public class StartDriveSync {
         datasource();
         liquibase(context);
 
-
         server.start();
         port = server.getConnectors()[0].getLocalPort();
         System.out.println(baseurl());
@@ -58,7 +57,7 @@ public class StartDriveSync {
 
     private void datasource() throws NamingException {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl("jdbc:mysql://localhost:3306/drivesync");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/notat");
         dataSource.setUsername("root");
         dataSource.setValidationQuery("select 1");
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
