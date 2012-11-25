@@ -8,9 +8,7 @@
     <changeSet id="changeset1" author="Frode" runOnChange="true" runAlways="false">
         <createTable tableName="gruppe">
             <column name="id" type="int"  />
-            <column name="tittel" type="varchar(255)" />
-            <column name="innhold" type="text"  />
-            <column name="endret_tid" type="datetime" />
+            <column name="gruppenavn" type="varchar(255)" />
         </createTable>
 
         <addPrimaryKey columnNames="id" tableName="gruppe"/>
@@ -21,27 +19,11 @@
             <column name="gruppe_id" type="number" />
             <column name="tittel" type="varchar(255)"  />
             <column name="innhold" type="text"  />
+            <column name="endret_tid" type="datetime" />
         </createTable>
 
         <addPrimaryKey columnNames="id" tableName="notat"/>
         <addAutoIncrement tableName="notat" columnName="id" columnDataType="int"/>
     </changeSet>
 
-
-
-
-    <!--create table if not exists gruppe (-->
-    <!--id int not null auto_increment primary key,-->
-    <!--gruppenavn varchar(255) not null-->
-    <!--);-->
-
-
-    <!--create table if not exists notat (-->
-    <!--id int not null auto_increment primary key,-->
-    <!--gruppe_id int not null,-->
-    <!--tittel varchar(255) not null,-->
-    <!--innhold text,-->
-    <!--endret_tid datetime not null,-->
-    <!--foreign key (gruppe_id) references gruppe (id)-->
-    <!--);-->
 </databaseChangeLog>

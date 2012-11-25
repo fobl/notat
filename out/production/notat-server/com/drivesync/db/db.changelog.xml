@@ -1,33 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.1"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.1
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.1.xsd">
-    <changeSet author="Frode">
-        <createTable name="gruppe">
-            <column name="id" type="number"/>
-            <column name="tittel" type="varchar(255)"/>
-            <column name="innhold" type="text" />
-            <column name="endret_tid" type="datetime"/>
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <changeSet id="changeset1" author="Frode" runOnChange="true" runAlways="false">
+        <createTable tableName="gruppe">
+            <column name="id" type="int"  />
+            <column name="gruppenavn" type="varchar(255)" />
         </createTable>
 
         <addPrimaryKey columnNames="id" tableName="gruppe"/>
+        <addAutoIncrement tableName="gruppe" columnName="id" columnDataType="int"/>
+
+        <createTable tableName="notat">
+            <column name="id" type="int"  />
+            <column name="gruppe_id" type="number" />
+            <column name="tittel" type="varchar(255)"  />
+            <column name="innhold" type="text"  />
+            <column name="endret_tid" type="datetime" />
+        </createTable>
+
+        <addPrimaryKey columnNames="id" tableName="notat"/>
+        <addAutoIncrement tableName="notat" columnName="id" columnDataType="int"/>
     </changeSet>
 
-
-    <!--create table if not exists gruppe (-->
-    <!--id int not null auto_increment primary key,-->
-    <!--gruppenavn varchar(255) not null-->
-    <!--);-->
-
-
-    <!--create table if not exists notat (-->
-    <!--id int not null auto_increment primary key,-->
-    <!--gruppe_id int not null,-->
-    <!--tittel varchar(255) not null,-->
-    <!--innhold text,-->
-    <!--endret_tid datetime not null,-->
-    <!--foreign key (gruppe_id) references gruppe (id)-->
-    <!--);-->
 </databaseChangeLog>

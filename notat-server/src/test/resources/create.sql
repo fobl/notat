@@ -1,4 +1,4 @@
-create table if not exists gruppe (
+  create table if not exists gruppe (
   id int not null auto_increment primary key,
   gruppenavn varchar(255) not null
 );

@@ -4,9 +4,9 @@ import com.drivesync.dto.Gruppe;
 import com.drivesync.dto.Notat;
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.dbutils.QueryRunner;
 import org.junit.Before;
 import org.junit.Test;
+import org.mortbay.jetty.plus.naming.EnvEntry;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -15,24 +15,17 @@ import static org.fest.assertions.Assertions.assertThat;
 public class DbServiceTest {
 
     private DbService service;
-    private QueryRunner queryRunner;
     private PodamFactory podamFactory;
 
     @Before
     public void setUp() throws Exception {
         BasicDataSource ds = new BasicDataSource();
         ds.setDriverClassName("org.h2.Driver");
-        ds.setUrl("jdbc:h2:mem;INIT=RUNSCRIPT FROM 'src/test/resources/create.sql'");
+        ds.setUrl("jdbc:h2:mem:test_mem;INIT=RUNSCRIPT FROM 'src/test/resources/create.sql'");
         ds.setUsername("sa");
-        service = new DbService(ds);
-        queryRunner = new QueryRunner(ds);
+        new EnvEntry("jdbc/notat", ds);
+        service = new DbService();
         podamFactory = new PodamFactoryImpl();
-    }
-
-    @Test
-    public void skalHenteVersjon() throws Exception {
-        queryRunner.update("insert into versjon (versjon_nr) values('SNAPSHOT-1.0')");
-        assertThat(service.hentVersjon()).isEqualTo("SNAPSHOT-1.0");
     }
 
     @Test
