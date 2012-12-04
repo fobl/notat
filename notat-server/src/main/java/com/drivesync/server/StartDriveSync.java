@@ -20,6 +20,10 @@ import java.util.Map;
 
 public class StartDriveSync {
 
+    public static final String JDBC_URL = "jdbc_url";
+    public static final String JDBC_USERNAME = "jdbc_username";
+    public static final String JDBC_PASSWORD = "jdbc_password";
+    public static final String JDBC_DRIVER = "jdbc_driver";
     private int port;
     private GuiceServletContextListener guiceServlet;
 
@@ -57,10 +61,11 @@ public class StartDriveSync {
 
     private void datasource() throws NamingException {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl("jdbc:mysql://localhost:3306/notat");
-        dataSource.setUsername("root");
+        dataSource.setUrl(System.getProperty(JDBC_URL, "jdbc:mysql://localhost:3306/notat"));
+        dataSource.setUsername(System.getProperty(JDBC_USERNAME, "root"));
+        dataSource.setPassword(System.getProperty(JDBC_PASSWORD, ""));
         dataSource.setValidationQuery("select 1");
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+        dataSource.setDriverClassName(System.getProperty(JDBC_DRIVER, "com.mysql.jdbc.Driver"));
         new EnvEntry("jdbc/notat", dataSource);
     }
 

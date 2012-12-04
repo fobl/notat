@@ -17,6 +17,10 @@ public class Gruppe extends JsonDto {
         return gruppenavn;
     }
 
+    public void setGruppenavn(String gruppenavn) {
+        this.gruppenavn = gruppenavn;
+    }
+
     @Override
     public String toString(){
         return id+":"+gruppenavn;

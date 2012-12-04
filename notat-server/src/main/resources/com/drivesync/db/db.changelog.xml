@@ -7,23 +7,21 @@
         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <changeSet id="changeset1" author="Frode" runOnChange="true" runAlways="false">
         <createTable tableName="gruppe">
-            <column name="id" type="int"  />
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
             <column name="gruppenavn" type="varchar(255)" />
         </createTable>
 
-        <addPrimaryKey columnNames="id" tableName="gruppe"/>
-        <addAutoIncrement tableName="gruppe" columnName="id" columnDataType="int"/>
-
         <createTable tableName="notat">
-            <column name="id" type="int"  />
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
             <column name="gruppe_id" type="number" />
             <column name="tittel" type="varchar(255)"  />
             <column name="innhold" type="text"  />
             <column name="endret_tid" type="datetime" />
         </createTable>
-
-        <addPrimaryKey columnNames="id" tableName="notat"/>
-        <addAutoIncrement tableName="notat" columnName="id" columnDataType="int"/>
     </changeSet>
 
 </databaseChangeLog>
