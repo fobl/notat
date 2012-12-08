@@ -1,1 +1,1 @@
-include 'notat-server', 'notat-com.notat.gui'
+include 'notat-server', 'notat-gui'
