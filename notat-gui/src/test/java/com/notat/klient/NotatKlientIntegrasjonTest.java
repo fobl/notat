@@ -1,7 +1,6 @@
 package com.notat.klient;
 
 import com.drivesync.dto.Notat;
-import com.drivesync.module.GuiceTestServlet;
 import com.drivesync.server.StartDriveSync;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Guice;
@@ -12,6 +11,8 @@ import org.junit.Test;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
+import static org.junit.Assert.assertEquals;
+
 public class NotatKlientIntegrasjonTest {
 
     private NotatKlient klient;
@@ -19,9 +20,10 @@ public class NotatKlientIntegrasjonTest {
 
     @Before
     public void setUp() throws Exception {
-        GuiceTestServlet testServlet = new GuiceTestServlet();
-        testServlet.getTestInjector().getBinding(StartDriveSync.class);
-
+        System.setProperty(StartDriveSync.JDBC_URL, "jdbc:h2:mem:test_mem;");
+        System.setProperty(StartDriveSync.JDBC_USERNAME, "sa");
+        System.setProperty(StartDriveSync.JDBC_PASSWORD, "");
+        System.setProperty(StartDriveSync.JDBC_DRIVER, "org.h2.Driver");
         Injector injector = Guice.createInjector(new GuiceModul());
         klient = injector.getInstance(NotatKlient.class);
     }
@@ -32,6 +34,6 @@ public class NotatKlientIntegrasjonTest {
         klient.nyttNotat(notat);
 
         ImmutableList<Notat> notater = klient.hentNotater();
-        System.out.println(notater);
+        assertEquals(notat.getTittel(), notater.get(0).getTittel());
     }
 }

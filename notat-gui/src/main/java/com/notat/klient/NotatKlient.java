@@ -7,11 +7,14 @@ import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 import com.google.inject.Inject;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.joda.time.LocalDateTime;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -31,12 +34,11 @@ public class NotatKlient {
 
     public void nyttNotat(Notat notat) {
         try {
-            HttpURLConnection connection = (HttpURLConnection) new URL(baseurl + "/notat/").openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-            out.write(notat.toJson());
-            out.close();
+            HttpPost post = new HttpPost(baseurl + "/notat/");
+            StringEntity json = new StringEntity(notat.toJson(), ContentType.APPLICATION_JSON);
+            post.setEntity(json);
+            DefaultHttpClient httpclient = new DefaultHttpClient();
+            httpclient.execute(post);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -44,17 +46,13 @@ public class NotatKlient {
         }
     }
 
-    public void oppdaterNotat(Notat notat) {
-
-    }
-
     public ImmutableList<Notat> hentNotater() {
         try {
             HttpURLConnection connection = (HttpURLConnection) new URL(baseurl + "/notat/").openConnection();
             String json = CharStreams.toString(new InputStreamReader(connection.getInputStream()));
-            List<StringMap> list = gson.fromJson(json, List.class);
+            List<StringMap> list =  gson.fromJson(json, List.class);
             List<Notat> notater = new ArrayList<>();
-            notaterFraJson(list, notater);
+                notaterFraJson(list, notater);
             return ImmutableList.copyOf(notater);
         } catch (IOException e) {
             throw new RuntimeException(e);
