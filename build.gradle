@@ -4,6 +4,10 @@ allprojects {
     apply plugin: 'artifactory'
     apply plugin: 'maven'
 
+    tasks.withType(Compile) {
+        options.encoding = 'UTF-8'
+    }
+
     sourceCompatibility = 1.7
 
     dependencies {
