@@ -66,12 +66,10 @@ public class DbService {
         }
     }
 
-    public Notat oppdaterNotat(Notat notat) {
+    public void oppdaterNotat(Notat notat) {
         try {
             queryRunner.update("update Notat set tittel = ?,  innhold = ?, endret_tid = ?, gruppe_id = ? where id = ?",
                     notat.getTittel(), notat.getInnhold(), notat.getEndretTid().toDate(), notat.getGruppeid(), notat.getId());
-
-            return queryRunner.query("select * from Notat where id = ?", new NotatHandler(), notat.getId()).get(0);
         } catch(SQLException e){
             throw new RuntimeException(e);
         }

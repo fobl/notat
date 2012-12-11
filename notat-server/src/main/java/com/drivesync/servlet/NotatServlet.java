@@ -44,11 +44,11 @@ public class NotatServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            log.info("notat 'doPost()'");
+            log.info("Nytt notat 'doPost()'");
             Notat notat = gson.fromJson(req.getReader(), Notat.class);
-            log.info("NOTAT "+notat);
+            log.info("NOTAT " + notat);
             dbService.lagreNotat(notat);
-            resp.setStatus(200);
+            resp.setStatus(201);
         } catch (IOException e) {
             resp.setStatus(500);
             throw new RuntimeException(e);
@@ -58,11 +58,24 @@ public class NotatServlet extends HttpServlet {
     @Override
     public void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
-            log.info("notat 'doPut()'");
+            log.info("Oppdater notat 'doPut()'");
             Notat notat = gson.fromJson(req.getReader(), Notat.class);
-            dbService.lagreNotat(notat);
+            dbService.oppdaterNotat(notat);
             resp.setStatus(200);
         } catch (IOException e) {
+            resp.setStatus(500);
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void doDelete(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String[] url = req.getRequestURI().split("/");
+            String id = url[url.length-1];
+            log.info("Slett notat 'doDelete()', id="+id);
+            dbService.slettNotat(Integer.valueOf(id));
+        } catch(Exception e){
             resp.setStatus(500);
             throw new RuntimeException(e);
         }
