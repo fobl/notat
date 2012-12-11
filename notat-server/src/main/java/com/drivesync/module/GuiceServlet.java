@@ -20,7 +20,7 @@ public class GuiceServlet extends GuiceServletContextListener {
             @Override
             protected void configureServlets() {
                 serve("/notat").with(NotatServlet.class);
-                serve("/notat/").with(NotatServlet.class);
+                serve("/notat/*").with(NotatServlet.class);
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
                 gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
