@@ -23,6 +23,8 @@ import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NotatGui extends Application {
 
@@ -31,6 +33,9 @@ public class NotatGui extends Application {
     private ListView notater = new ListView();
     private final TextArea innhold = new TextArea();
     private List<Notat> notatliste;
+    private Timer oppdaterTimer;
+    private Notat notat;
+    private boolean skitten = false;
 
     private boolean klikketEnter;
 
@@ -47,9 +52,10 @@ public class NotatGui extends Application {
 
         leggTilNotater();
         velgNotat();
+        oppdaterNotat();
         tittelBokstavhåndtering();
-        notaterBokstavhåndtering();
         innholdBokstavhåndtering();
+        listeBokstavhåndtering();
 
         BorderPane bp = new BorderPane();
         bp.setTop(tittel);
@@ -68,7 +74,10 @@ public class NotatGui extends Application {
                 if (keyEvent.getCode() == KeyCode.ENTER) {
                     if (klikketEnter) {
                         klikketEnter = false;
-                        notatliste = ImmutableList.<Notat>builder().add(new Notat(null, tittel.getText(), "", new LocalDateTime(), 1)).addAll(notatliste).build();
+                        notat = new Notat(null, tittel.getText(), "", new LocalDateTime(), 1);
+                        lagreNotat(notat);
+                        leggTilNotater();
+                        notatliste = ImmutableList.<Notat>builder().add(notat).addAll(notatliste).build();
                         innhold.requestFocus();
                     } else {
                         klikketEnter = true;
@@ -83,25 +92,27 @@ public class NotatGui extends Application {
         );
     }
 
-    private void notaterBokstavhåndtering(){
+    private void listeBokstavhåndtering(){
         notater.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                ((Notat)notater.getSelectionModel().getSelectedItem()).setInnhold(innhold.getText());
+                if (keyEvent.getCode() == KeyCode.ENTER) {
+                    notat = ((Notat)notater.getSelectionModel().getSelectedItem());
+                    innhold.requestFocus();
+                } else if (keyEvent.getCode() == KeyCode.UP && notater.getSelectionModel().getSelectedIndex() == 0) {
+                    tittel.requestFocus();
+                }
             }
         }
         );
     }
 
     private void innholdBokstavhåndtering(){
-        notater.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        innhold.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
-                if (keyEvent.getCode() == KeyCode.ENTER) {
-                    innhold.requestFocus();
-                } else if (keyEvent.getCode() == KeyCode.UP && notater.getSelectionModel().getSelectedIndex() == 0) {
-                    tittel.requestFocus();
-                }
+                notat.setInnhold(innhold.getText());
+                skitten = true;
             }
         }
         );
@@ -135,5 +146,23 @@ public class NotatGui extends Application {
     private void leggTilNotater() {
         notatliste = klient.hentNotater();
         notater.setItems(FXCollections.observableList(notatliste));
+    }
+
+    private void lagreNotat(Notat notat){
+        klient.nyttNotat(notat);
+    }
+
+    private void oppdaterNotat(){
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if(notat != null && skitten){
+                    klient.oppdaterNotat(notat);
+                    skitten = false;
+                }
+            }
+        };
+        oppdaterTimer = new Timer();
+        oppdaterTimer.schedule(task, 10L, 1000L);
     }
 }
