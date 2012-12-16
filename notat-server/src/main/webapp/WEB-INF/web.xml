@@ -14,7 +14,7 @@
     </filter-mapping>
 
     <listener>
-        <listener-class>com.drivesync.module.GuiceServlet</listener-class>
+        <listener-class>com.notat.server.module.GuiceServlet</listener-class>
     </listener>
 
     <context-param>
