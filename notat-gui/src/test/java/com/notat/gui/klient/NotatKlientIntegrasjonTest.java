@@ -1,11 +1,8 @@
 package com.notat.gui.klient;
 
-import com.notat.server.dto.Notat;
-import com.notat.server.StartDriveSync;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.notat.gui.modul.GuiceModul;
+import com.notat.server.StartNotatServer;
+import com.notat.server.dto.Notat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +19,11 @@ public class NotatKlientIntegrasjonTest {
 
     @Before
     public void setUp() throws Exception {
-        System.setProperty(StartDriveSync.JDBC_URL, "jdbc:h2:mem:test_mem;");
-        System.setProperty(StartDriveSync.JDBC_USERNAME, "sa");
-        System.setProperty(StartDriveSync.JDBC_PASSWORD, "");
-        System.setProperty(StartDriveSync.JDBC_DRIVER, "org.h2.Driver");
-        Injector injector = Guice.createInjector(new GuiceModul());
-        klient = injector.getInstance(NotatKlient.class);
+        System.setProperty(StartNotatServer.JDBC_URL, "jdbc:h2:mem:test_mem;");
+        System.setProperty(StartNotatServer.JDBC_USERNAME, "sa");
+        System.setProperty(StartNotatServer.JDBC_PASSWORD, "");
+        System.setProperty(StartNotatServer.JDBC_DRIVER, "org.h2.Driver");
+        klient = new NotatKlient(new StartNotatServer());
     }
 
     @After

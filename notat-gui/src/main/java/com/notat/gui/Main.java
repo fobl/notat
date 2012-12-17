@@ -1,11 +1,9 @@
 package com.notat.gui;
 
-import com.notat.server.dto.Notat;
 import com.google.common.collect.ImmutableList;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
 import com.notat.gui.klient.NotatKlient;
-import com.notat.gui.modul.GuiceModul;
+import com.notat.server.StartNotatServer;
+import com.notat.server.dto.Notat;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -45,8 +43,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Injector injector = Guice.createInjector(new GuiceModul());
-        klient = injector.getInstance(NotatKlient.class);
+        klient = new NotatKlient(new StartNotatServer());
 
         primaryStage.setTitle("Notat");
 

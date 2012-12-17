@@ -1,12 +1,11 @@
 package com.notat.gui.klient;
 
-import com.notat.server.dto.Notat;
-import com.notat.server.StartDriveSync;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.CharStreams;
-import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
-import com.google.inject.Inject;
+import com.notat.server.StartNotatServer;
+import com.notat.server.dto.Notat;
+import com.notat.server.tools.GsonFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -28,14 +27,11 @@ import java.util.List;
 public class NotatKlient {
 
     private String baseurl;
-    private Gson gson;
     private Logger logg = LoggerFactory.getLogger("NotatKlient.class");
 
 
-    @Inject
-    public NotatKlient(StartDriveSync server, Gson gson) throws Exception {
+    public NotatKlient(StartNotatServer server) throws Exception {
         baseurl = server.start().baseurl();
-        this.gson = gson;
     }
 
     public void nyttNotat(Notat notat) {
@@ -44,7 +40,10 @@ public class NotatKlient {
             HttpPost post = new HttpPost(baseurl + "/notat/");
             StringEntity json = new StringEntity(notat.toJson(), ContentType.APPLICATION_JSON);
             post.setEntity(json);
-            new DefaultHttpClient().execute(post);
+            HttpResponse respons = new DefaultHttpClient().execute(post);
+            if(respons.getStatusLine().getStatusCode() != 201){
+                throw new RuntimeException("Feil i statuskode fra nytt notat "+baseurl+"/notat/, statuskode: "+respons.getStatusLine().getStatusCode());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +55,10 @@ public class NotatKlient {
             HttpPut put = new HttpPut(baseurl + "/notat/");
             StringEntity json = new StringEntity(notat.toJson(), ContentType.APPLICATION_JSON);
             put.setEntity(json);
-            new DefaultHttpClient().execute(put);
+            HttpResponse respons = new DefaultHttpClient().execute(put);
+            if(respons.getStatusLine().getStatusCode() != 200){
+                throw new RuntimeException("Feil i statuskode fra oppdaterer notat "+baseurl+"/notat/, statuskode: "+respons.getStatusLine().getStatusCode());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -66,7 +68,10 @@ public class NotatKlient {
         try {
             logg.info("Sletter notat "+id);
             HttpDelete delete = new HttpDelete(baseurl + "/notat/" + id);
-            new DefaultHttpClient().execute(delete);
+            HttpResponse respons = new DefaultHttpClient().execute(delete);
+            if(respons.getStatusLine().getStatusCode() != 200){
+                throw new RuntimeException("Feil i statuskode fra sletter notat "+baseurl+"/notat/"+id+", statuskode: "+respons.getStatusLine().getStatusCode());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,6 +82,9 @@ public class NotatKlient {
             logg.info("Henter notater");
             HttpGet get = new HttpGet(baseurl + "/notat/");
             HttpResponse response = new DefaultHttpClient().execute(get);
+            if(response.getStatusLine().getStatusCode() != 200){
+                throw new RuntimeException("Feil i statuskode fra henter notat "+baseurl+"/notat/, statuskode: "+response.getStatusLine().getStatusCode());
+            }
             return hentUtNotater(response);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -87,7 +95,7 @@ public class NotatKlient {
     private ImmutableList<Notat> hentUtNotater(HttpResponse response) throws IOException {
         try (InputStream inputstream = response.getEntity().getContent()) {
             String json = CharStreams.toString(new InputStreamReader(inputstream));
-            List<StringMap> list = gson.fromJson(json, List.class);
+            List<StringMap> list = GsonFactory.gson().fromJson(json, List.class);
             List<Notat> notater = new ArrayList<>();
             notaterFraJson(list, notater);
             logg.info("Hentet ut "+list.size()+" notater");

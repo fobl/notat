@@ -30,6 +30,6 @@ public class DbTestUtil {
         String path = System.getProperty("user.dir");
         //hack for å få path til notat prosjektet både i gradle og idea.
         String[] split = path.split("notat-gui");
-        return split[split.length-1];
+        return split[0];
     }
 }

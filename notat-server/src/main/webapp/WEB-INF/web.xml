@@ -3,29 +3,30 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-    <filter>
-        <filter-name>guiceFilter</filter-name>
-        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
-    </filter>
+    <servlet>
+        <servlet-name>notat</servlet-name>
+        <servlet-class>com.notat.server.servlet.NotatServlet</servlet-class>
+    </servlet>
 
-    <filter-mapping>
-        <filter-name>guiceFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    <servlet-mapping>
+        <servlet-name>notat</servlet-name>
+        <url-pattern>/notat/*</url-pattern>
+    </servlet-mapping>
 
-    <listener>
-        <listener-class>com.notat.server.module.GuiceServlet</listener-class>
-    </listener>
+    <servlet-mapping>
+        <servlet-name>notat</servlet-name>
+        <url-pattern>/notat</url-pattern>
+    </servlet-mapping>
 
     <context-param>
         <param-name>liquibase.changelog</param-name>
-        <param-value>com/drivesync/db/db.changelog.xml</param-value>
+        <param-value>com/notat/server/db/db.changelog.xml</param-value>
     </context-param>
 
-    <context-param>
-        <param-name>liquibase.datasource</param-name>
-        <param-value>java:comp/env/jdbc/notat</param-value>
-    </context-param>
+    <!--<context-param>-->
+        <!--<param-name>liquibase.datasource</param-name>-->
+        <!--<param-value>java:comp/env/jdbc/notat</param-value>-->
+    <!--</context-param>-->
 
     <context-param>
         <param-name>liquibase.onerror.fail</param-name>

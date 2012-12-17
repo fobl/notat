@@ -1,9 +1,5 @@
 package com.notat.server;
 
-import com.notat.server.module.GuiceServlet;
-import com.google.inject.Inject;
-import com.google.inject.servlet.GuiceFilter;
-import com.google.inject.servlet.GuiceServletContextListener;
 import liquibase.integration.servlet.LiquibaseServletListener;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.mortbay.jetty.Connector;
@@ -11,37 +7,40 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.plus.naming.EnvEntry;
 import org.mortbay.jetty.servlet.Context;
-import org.mortbay.jetty.servlet.DefaultServlet;
+import org.mortbay.jetty.webapp.WebAppContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.NamingException;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class StartDriveSync {
+public class StartNotatServer {
 
+    private Logger logg = LoggerFactory.getLogger(StartNotatServer.class);
     public static final String JDBC_URL = "jdbc_url";
     public static final String JDBC_USERNAME = "jdbc_username";
     public static final String JDBC_PASSWORD = "jdbc_password";
     public static final String JDBC_DRIVER = "jdbc_driver";
     private int port;
-    private GuiceServletContextListener guiceServlet;
 
-    @Inject
-    public StartDriveSync(GuiceServletContextListener guiceServlet) {
-        this.guiceServlet = guiceServlet;
+    public StartNotatServer() {
     }
 
     public static void main(String... args) throws Exception {
-        new StartDriveSync(new GuiceServlet()).start();
+        StartNotatServer start = new StartNotatServer();
+        start.start();
     }
 
-    public StartDriveSync start() throws Exception {
+    public StartNotatServer start() throws Exception {
         Server server = new Server(0);
         SocketConnector connector = new SocketConnector();
         server.setConnectors(new Connector[]{connector});
 
-        Context context = guice(server);
+        Context context = lagContext();
+        server.addHandler(context);
+
         datasource();
         liquibase(context);
 
@@ -51,12 +50,18 @@ public class StartDriveSync {
         return this;
     }
 
-    private Context guice(Server server) {
-        Context context = new Context(server, "/", Context.SESSIONS);
-        context.addFilter(GuiceFilter.class, "/*", 0);
-        context.addServlet(DefaultServlet.class, "/");
-        context.addEventListener(guiceServlet);
+    private Context lagContext() {
+        String path = path() +"notat-server/src/main/webapp";
+        logg.info("Setter opp webapps på "+path);
+        WebAppContext context = new WebAppContext(path, "/");
         return context;
+    }
+
+    public static String path(){
+        String path = System.getProperty("user.dir");
+        //hack for å få path til notat prosjektet både i gradle og idea.
+        String[] split = path.split("notat-");
+        return split[0];
     }
 
     private void datasource() throws NamingException {

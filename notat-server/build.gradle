@@ -7,8 +7,6 @@ dependencies {
     compile 'org.mortbay.jetty:jetty-naming:6.1.25'
     compile 'org.mortbay.jetty:jetty-plus:6.1.25'
     compile 'com.google.code.gson:gson:2.2.2'
-    compile 'com.google.inject.extensions:guice-servlet:3.0'
-    compile 'com.google.code.gson:gson:2.1'
     compile 'commons-dbcp:commons-dbcp:1.4'
     compile 'mysql:mysql-connector-java:5.1.21'
     compile 'joda-time:joda-time:2.1'

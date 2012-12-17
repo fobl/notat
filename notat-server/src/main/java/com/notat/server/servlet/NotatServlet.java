@@ -1,11 +1,9 @@
 package com.notat.server.servlet;
 
+import com.google.common.collect.ImmutableList;
 import com.notat.server.db.DbService;
 import com.notat.server.dto.Notat;
-import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.notat.server.tools.GsonFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,17 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-@Singleton
 public class NotatServlet extends HttpServlet {
 
     Logger log = Logger.getLogger("NotatServlet.class");
     private DbService dbService;
-    private static Gson gson;
 
-    @Inject
-    public void DriveSyncServlet(DbService dbService, Gson gson) {
-        this.dbService = dbService;
-        this.gson = gson;
+    public NotatServlet() {
+        this.dbService = new DbService();
     }
 
     @Override
@@ -34,7 +28,7 @@ public class NotatServlet extends HttpServlet {
             resp.setStatus(200);
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
-            resp.getWriter().write(gson.toJson(notater));
+            resp.getWriter().write(GsonFactory.gson().toJson(notater));
         } catch (IOException e) {
             resp.setStatus(500);
             throw new RuntimeException(e);
@@ -45,7 +39,7 @@ public class NotatServlet extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         try {
             log.info("Nytt notat 'doPost()'");
-            Notat notat = gson.fromJson(req.getReader(), Notat.class);
+            Notat notat = GsonFactory.gson().fromJson(req.getReader(), Notat.class);
             log.info("NOTAT " + notat);
             dbService.lagreNotat(notat);
             resp.setStatus(201);
@@ -59,7 +53,7 @@ public class NotatServlet extends HttpServlet {
     public void doPut(HttpServletRequest req, HttpServletResponse resp) {
         try {
             log.info("Oppdater notat 'doPut()'");
-            Notat notat = gson.fromJson(req.getReader(), Notat.class);
+            Notat notat = GsonFactory.gson().fromJson(req.getReader(), Notat.class);
             dbService.oppdaterNotat(notat);
             resp.setStatus(200);
         } catch (IOException e) {
